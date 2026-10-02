@@ -1,0 +1,20 @@
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.exe.config
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.exe
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.pdb
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.AssemblyReference.cache
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.Properties.Resources.resources
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.GenerateResource.cache
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.exe
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.pdb
+C:\Users\ASUS\Source\Repos\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.exe.config
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.exe.config
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.exe
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\bin\Debug\CafeManagementSystem.pdb
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.AssemblyReference.cache
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.exe.config
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.Properties.Resources.resources
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.GenerateResource.cache
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.csproj.CoreCompileInputs.cache
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.exe
+C:\OJT\kunal project\CafeManagementSystem\CafeManagementSystem\CafeManagementSystem\obj\Debug\CafeManagementSystem.pdb

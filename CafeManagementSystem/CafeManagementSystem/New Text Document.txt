@@ -1,0 +1,170 @@
+-- Create the database for our project
+CREATE DATABASE CafeDB;
+GO
+
+-- Switch to the newly created database
+USE CafeDB;
+GO
+
+-- Create the users table to handle authentication and roles
+CREATE TABLE users (
+    user_id INT PRIMARY KEY IDENTITY(1,1), -- Auto-incrementing primary key
+    username VARCHAR(50) UNIQUE NOT NULL,    -- The login username, must be unique
+    full_name VARCHAR(100) NOT NULL,         -- The full name of the user for display
+    password_hash VARCHAR(255) NOT NULL,   -- IMPORTANT: This will store a HASH of the password, not the password itself
+    role VARCHAR(20) NOT NULL,               -- Role of the user, e.g., 'Admin' or 'Staff'
+    is_active BIT NOT NULL DEFAULT 1         -- To disable accounts without deleting them
+);
+GO
+
+-- Insert some sample data for testing purposes
+-- In a real application, you would use a hashing algorithm to generate the password_hash.
+-- For now, we will store them as plain text for easy testing in this first step.
+-- We will implement hashing in the next steps.
+INSERT INTO users (username, full_name, password_hash, role) VALUES
+('admin', 'Abhay Todkar', 'admin123', 'Admin'),
+('staff1', 'Bhushan Patil', 'staff123', 'Staff');
+GO
+
+-- Verify that the data was inserted correctly
+SELECT * FROM users;
+GO
+
+update users set password_hash=123 where user_id in (1,2)
+
+
+-- Create the orders table if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='orders' and xtype='U')
+BEGIN
+    CREATE TABLE orders (
+        order_id INT PRIMARY KEY IDENTITY(1,1),
+        user_id INT FOREIGN KEY REFERENCES users(user_id),
+        order_date DATETIME NOT NULL DEFAULT GETDATE(),
+        total_amount DECIMAL(10, 2) NOT NULL
+    );
+END
+GO
+
+-- Create the menu_items table if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='menu_items' and xtype='U')
+BEGIN
+    CREATE TABLE menu_items (
+        item_id INT PRIMARY KEY IDENTITY(1,1),
+        item_name VARCHAR(100) NOT NULL,
+        category VARCHAR(50) NOT NULL,
+        price DECIMAL(8, 2) NOT NULL
+    );
+END
+GO
+
+-- Insert some sample data for testing the dashboard
+-- (Clear old data first to avoid duplicates)
+DELETE FROM orders;
+DELETE FROM menu_items;
+
+INSERT INTO menu_items (item_name, category, price) VALUES
+('Espresso', 'Coffee', 150.00),
+('Latte', 'Coffee', 180.00),
+('Samosa', 'Snacks', 50.00);
+
+INSERT INTO orders (user_id, order_date, total_amount) VALUES
+(2, GETDATE(), 230.00), -- staff1 (ID 2) made this order today
+(2, DATEADD(day, -1, GETDATE()), 150.00); -- This order was yesterday
+GO
+
+
+CREATE TABLE tables (
+    table_id INT PRIMARY KEY IDENTITY(1,1),
+    table_name VARCHAR(50) NOT NULL UNIQUE,
+    status VARCHAR(20) NOT NULL DEFAULT 'Available' -- Status can be 'Available' or 'Occupied'
+);
+GO
+
+-- Insert sample data for the tables
+
+INSERT INTO tables (table_name, status) VALUES
+('T-01', 'Available'), ('T-02', 'Occupied'), ('T-03', 'Available'), ('T-04', 'Available'),
+('T-05', 'Occupied'), ('T-06', 'Available'), ('T-07', 'Available'), ('T-08', 'Available'),
+('T-09', 'Occupied'), ('T-10', 'Available'), ('T-11', 'Available'), ('T-12', 'Available');
+GO
+
+
+
+CREATE TABLE order_details (
+    order_detail_id INT PRIMARY KEY IDENTITY(1,1),
+    order_id INT NOT NULL FOREIGN KEY REFERENCES orders(order_id),
+    item_id INT NOT NULL FOREIGN KEY REFERENCES menu_items(item_id),
+    quantity INT NOT NULL,
+    price_at_time_of_order DECIMAL(8, 2) NOT NULL -- Stores the price at the time of purchase
+);
+GO
+
+-- Insert sample data to link your existing orders and menu items
+
+
+INSERT INTO order_details (order_id, item_id, quantity, price_at_time_of_order) VALUES
+(
+    (SELECT TOP 1 order_id FROM orders WHERE total_amount = 230.00), 
+    (SELECT item_id FROM menu_items WHERE item_name = 'Latte'), 
+    1, 
+    180.00
+),
+(
+    (SELECT TOP 1 order_id FROM orders WHERE total_amount = 230.00), 
+    (SELECT item_id FROM menu_items WHERE item_name = 'Samosa'), 
+    1, 
+    50.00
+);
+
+INSERT INTO order_details (order_id, item_id, quantity, price_at_time_of_order) VALUES
+(
+    (SELECT TOP 1 order_id FROM orders WHERE total_amount = 150.00), 
+    (SELECT item_id FROM menu_items WHERE item_name = 'Espresso'), 
+    1, 
+    150.00
+);
+GO
+
+
+ALTER TABLE orders
+ADD status VARCHAR(20) NOT NULL DEFAULT 'Active';
+GO
+
+-- Add a column to store how the bill was paid
+ALTER TABLE orders
+ADD payment_method VARCHAR(20);
+GO
+
+-- For our existing sample data, let's mark the old orders as 'Paid'
+UPDATE orders SET status = 'Paid', payment_method = 'Cash';
+GO
+
+
+ALTER TABLE orders
+ADD table_id INT FOREIGN KEY REFERENCES tables(table_id);
+GO
+
+USE CafeDB;
+GO
+
+PRINT 'Creating a sample ACTIVE order for an occupied table...';
+
+-- Let's create an active order for Table T-02 (assuming its table_id is 2)
+-- This order will have one Espresso and one Samosa.
+
+-- First, create the main order record. Total amount is 0 for now as it's not finalized.
+INSERT INTO orders (user_id, table_id, total_amount, status) 
+VALUES (2, 2, 0, 'Active'); -- For staff1 (user_id=2) on table T-02 (table_id=2)
+GO
+
+-- Get the ID of the order we just created
+DECLARE @ActiveOrderId INT = SCOPE_IDENTITY();
+
+-- Now add the items to this active order
+INSERT INTO order_details (order_id, item_id, quantity, price_at_time_of_order) VALUES
+(@ActiveOrderId, (SELECT item_id FROM menu_items WHERE item_name = 'Espresso'), 1, 150.00),
+(@ActiveOrderId, (SELECT item_id FROM menu_items WHERE item_name = 'Samosa'), 2, 50.00);
+GO
+
+PRINT 'Sample active order created successfully for Table T-02.';
+GO
